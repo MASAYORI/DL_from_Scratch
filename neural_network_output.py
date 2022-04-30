@@ -1,4 +1,6 @@
 import numpy as np
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.datasets import mnist
 import matplotlib.pyplot as plt
 import pickle
@@ -8,10 +10,10 @@ from activation_function import *
 
 def get_data():
     mnist_data = mnist.load_data()
-    x_train = mnist_data[0][0].reshape([60000, 784])
-    t_train = mnist_data[0][1].reshape([60000, ])
+    scaler = MinMaxScaler()
     x_test = mnist_data[1][0].reshape([10000, 784])
     t_test = mnist_data[1][1].reshape([10000, ])
+    x_test = scaler.fit_transform(x_test)
     return x_test, t_test
 
 
@@ -45,7 +47,6 @@ def main():
         if p == t[i]:
             accuracy_count += 1
     print('Accuracy: {}'.format(accuracy_count/len(x)))
-
 
 
 if __name__ == '__main__':
