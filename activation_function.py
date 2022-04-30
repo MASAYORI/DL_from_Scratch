@@ -7,10 +7,7 @@ def step_function(x):
 
 
 def sigmoid(x):
-    if x >= 0:
-        return 1 / (1 + np.exp(-x))
-    else:
-        return np.exp(x) / (np.exp(x) + 1)
+    return np.exp(np.minimum(x, 0)) / (1 + np.exp(- np.abs(x)))
 
 
 def relu(x):
