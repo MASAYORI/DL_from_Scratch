@@ -8,13 +8,23 @@ import pickle
 from activation_function import *
 
 
-def get_data():
+def get_data(normalize=True, one_hot_label=False):
     mnist_data = mnist.load_data()
-    scaler = MinMaxScaler()
+
+    x_train = mnist_data[0][0].reshape([60000, 784])
+    t_train = mnist_data[0][1].reshape([60000, ])
     x_test = mnist_data[1][0].reshape([10000, 784])
     t_test = mnist_data[1][1].reshape([10000, ])
-    x_test = scaler.fit_transform(x_test)
-    return x_test, t_test
+
+    if one_hot_label:
+        t_train = pd.get_dummies(t_train).values
+        t_test = pd.get_dummies(t_test).values
+
+    if normalize:
+        scaler = MinMaxScaler()
+        x_train = scaler.fit_transform(x_train)
+        x_test = scaler.transform(x_test)
+    return (x_train, t_train), (x_test, t_test)
 
 
 def init_network():
@@ -38,7 +48,7 @@ def predict(network, x):
 
 
 def main():
-    x, t = get_data()
+    (_, _), (x, t) = get_data()
     network = init_network()
     batch_size = 100
     accuracy_count = 0
