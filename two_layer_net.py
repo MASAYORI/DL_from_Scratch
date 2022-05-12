@@ -34,7 +34,7 @@ class TwoLayerNet:
     def accuracy(self, x, t):
         y = self.predict(x)
         y = np.argmax(y, axis=1)
-        t = np.argmax(y, axis=1)
+        t = np.argmax(t, axis=1)
 
         accuracy = np.sum(y == t) / x.shape[0]
         return accuracy

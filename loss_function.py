@@ -9,11 +9,14 @@ def sum_square_error(y, t):
 
 def cross_entropy_error(y, t):
     if y.ndim == 1:
-        t = t.reshape(1, -1)
-        y = y.reshape(1, -1)
+        t = t.reshape(1, t.size)
+        y = y.reshape(1, y.size)
+
+    if t.size == y.size:
+        t = t.argmax(axis=1)
 
     batch_size = y.shape[0]
-    delta = 1e-10
+    delta = 1e-7
     return -np.sum(np.log(y[np.arange(batch_size), t] + delta)) / batch_size
 
 
@@ -28,7 +31,7 @@ def main():
     batch_mask = np.random.choice(train_size, batch_size)
     x_batch = x_train[batch_mask]
     t_batch = t_train[batch_mask]
-    # print(cross_entropy_error(x_batch, t_batch))
+    print(cross_entropy_error(x_batch, t_batch))
 
 
 if __name__ == '__main__':
