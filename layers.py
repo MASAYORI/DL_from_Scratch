@@ -1,5 +1,7 @@
 import numpy as np
 
+from activation_function import *
+from loss_function import *
 
 class Relu:
     def __init__(self):
@@ -23,7 +25,7 @@ class Sigmoid:
         self.out = None
 
     def forward(self, x):
-        out = np.exp(np.minimum(x, 0)) / (1 + np.exp(- np.abs(x)))
+        out = sigmoid(x)
         self.out = out
 
         return out
@@ -33,5 +35,46 @@ class Sigmoid:
 
         return dx
 
+
+class Affine:
+    def __init__(self, W, b):
+        self.W = W
+        self.b = b
+        self.X = None
+        self.dW = None
+        self.db = None
+
+    def forward(self, X):
+        self.X = X
+        out = np.dot(X, self.W) + self.b
+
+        return out
+
+    def backward(self, dout):
+        dx = np.dot(dout, self.W.T)
+        self.dW = np.dot(self.X.T, dout)
+        self.db = np.sum(dout, axis=0)
+
+        return dx
+
+
+class SoftmaxWithLoss:
+    def __init__(self):
+        self.loss = None
+        self.y = None
+        self.t = None
+
+    def forward(self, x, t):
+        self.t = x
+        self.y = softmax(x)
+        self.loss = cross_entropy_error(self.y, self.t)
+
+        return self.loss
+
+    def backward(self, dout=1):
+        batch_size = self.t.shape[0]
+        dx = (self.y - self.t) / batch_size
+
+        return dx
 
 
