@@ -15,12 +15,9 @@ def relu(x):
 
 
 def softmax(a):
-    c = np.max(a)                   # Overflow prevention
-    exp_a = np.exp(a - c)
-    sum_exp_a = np.sum(exp_a)
-    y = exp_a / sum_exp_a
+    a = a - np.max(a, axis=-1, keepdims=True)                   # Overflow prevention
 
-    return y
+    return np.exp(a) / np.sum(np.exp(a), axis=-1, keepdims=True)
 
 
 def main():
